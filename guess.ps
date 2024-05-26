@@ -1,0 +1,36 @@
+Write-host ""
+Write-Host "  This program guesses v4 UUID's. The probability is 2^128 ... "
+Write-host ""
+$number = Read-Host -Prompt "  enter a UUID: "
+Write-host ""
+$validUUIDFormat = '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+$run = ($number -match $validUUIDFormat)
+$guesses = 0
+try{
+	if ($run) {
+		while ($true) {
+			$uuid = [guid]::NewGuid().ToString()	
+			if ( $uuid -eq $number ) {
+				Write-Host "found uuid!"
+				break;
+			}
+			else {
+				Write-Host "guessing: " $uuid
+				$guesses ++
+			}
+		}	
+	}
+	else {
+		Write-Host "  invalid v4 uuid - exiting program"
+		Write-host ""
+	}
+} finally {
+	if ($run) {
+		Write-Host ""
+		$logBase2 = [Math]::Log($guesses, 2)
+		Write-Host "  total number of guesses: " $guesses
+		Write-Host "  in powers of 2 : 2^"$logBase2
+		Write-Host "  probability of guessing 2^128 ... "
+		Write-Host ""
+	}
+}
